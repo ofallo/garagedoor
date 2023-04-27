@@ -19,12 +19,12 @@ print(" Number of Sensors Per Door: " + str(SENSORS_PER_DOOR))
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
-GPIO.setup(16, GPIO.IN, GPIO.PUD_UP) # Door 1 is Closed sensor
-GPIO.setup(18, GPIO.IN, GPIO.PUD_UP) # Door 1 is Open sensor
-GPIO.setup(29, GPIO.IN, GPIO.PUD_UP) # Door 2 is Closed sensor
-GPIO.setup(31, GPIO.IN, GPIO.PUD_UP) # Door 2 is Open sensor
-GPIO.setup(33, GPIO.IN, GPIO.PUD_UP) # Door 3 is Closed sensor
-GPIO.setup(37, GPIO.IN, GPIO.PUD_UP) # Door 3 is Open sensor
+GPIO.setup(7, GPIO.IN, GPIO.PUD_UP) # Door 1 is Closed sensor
+GPIO.setup(11, GPIO.IN, GPIO.PUD_UP) # Door 1 is Open sensor
+GPIO.setup(13, GPIO.IN, GPIO.PUD_UP) # Door 2 is Closed sensor
+GPIO.setup(15, GPIO.IN, GPIO.PUD_UP) # Door 2 is Open sensor
+GPIO.setup(16, GPIO.IN, GPIO.PUD_UP) # Door 3 is Closed sensor
+GPIO.setup(18, GPIO.IN, GPIO.PUD_UP) # Door 3 is Open sensor
 time.sleep(1)
 
 TimeDoorOpened = datetime.strptime(datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S'),'%Y-%m-%d %H:%M:%S')  #Default Time
@@ -60,7 +60,7 @@ try:
 
 #------------------------------- Door 1 Code -------------------------------
 
-		if GPIO.input(16) == GPIO.HIGH and GPIO.input(18) == GPIO.HIGH:  #Door Status is Unknown (or Open if 1 Sensor Per Door)
+		if GPIO.input(7) == GPIO.HIGH and GPIO.input(11) == GPIO.HIGH:  #Door Status is Unknown (or Open if 1 Sensor Per Door)
 			logfile = open("static/log.txt","a")
 			if SENSORS_PER_DOOR == 1:
 				logfile.write(datetime.now().strftime("%Y/%m/%d -- %H:%M:%S  -- Door #1 Open \n"))
@@ -70,17 +70,17 @@ try:
 				print(datetime.now().strftime("%Y/%m/%d -- %H:%M:%S  -- Door #1 Opening/Closing"))
 			logfile.close()
 		else:		
-			while GPIO.input(16) == GPIO.HIGH and GPIO.input(18) == GPIO.HIGH:
+			while GPIO.input(7) == GPIO.HIGH and GPIO.input(11) == GPIO.HIGH:
 				time.sleep(.5)
 			else:
-				if GPIO.input(16) == GPIO.LOW:  #Door is Closed
+				if GPIO.input(7) == GPIO.LOW:  #Door is Closed
 					logfile = open("static/log.txt","a")
 					logfile.write(datetime.now().strftime("%Y/%m/%d -- %H:%M:%S  -- Door #1 Closed \n"))
 					logfile.close()
 					print(datetime.now().strftime("%Y/%m/%d -- %H:%M:%S  -- Door #1 Closed"))
 					Door1_OpenTimer = 0
 
-				if GPIO.input(18) == GPIO.LOW:  #Door is Open
+				if GPIO.input(11) == GPIO.LOW:  #Door is Open
 					logfile = open("static/log.txt","a")
 					logfile.write(datetime.now().strftime("%Y/%m/%d -- %H:%M:%S  -- Door #1 Open \n"))
 					logfile.close()
@@ -93,7 +93,7 @@ try:
 #------------------------------- Door 2 Code -------------------------------
 
 		if NUMBER_OF_DOORS > 1:
-			if GPIO.input(29) == GPIO.HIGH and GPIO.input(31) == GPIO.HIGH:  #Door Status is Unknown (or Open if 1 Sensor Per Door)
+			if GPIO.input(13) == GPIO.HIGH and GPIO.input(15) == GPIO.HIGH:  #Door Status is Unknown (or Open if 1 Sensor Per Door)
 				if Door2_OpenTimer == 0:
 					logfile = open("static/log.txt","a")
 				if SENSORS_PER_DOOR == 1:
@@ -105,17 +105,17 @@ try:
 				logfile.close()
 				Door2_OpenTimer = 1
 			else:
-				while GPIO.input(16) == GPIO.HIGH and GPIO.input(18) == GPIO.HIGH:
+				while GPIO.input(7) == GPIO.HIGH and GPIO.input(11) == GPIO.HIGH:
 					time.sleep(.5)
 				else:
-					if GPIO.input(29) == GPIO.LOW:  #Door is Closed
+					if GPIO.input(13) == GPIO.LOW:  #Door is Closed
 						logfile = open("static/log.txt","a")
 						logfile.write(datetime.now().strftime("%Y/%m/%d -- %H:%M:%S  -- Door #2 Closed \n"))
 						logfile.close()
 						print(datetime.now().strftime("%Y/%m/%d -- %H:%M:%S  -- Door #2 Closed"))
 						Door2_OpenTimer = 0
 
-				if GPIO.input(31) == GPIO.LOW:  #Door is Open
+				if GPIO.input(15) == GPIO.LOW:  #Door is Open
 					logfile = open("static/log.txt","a")
 					logfile.write(datetime.now().strftime("%Y/%m/%d -- %H:%M:%S  -- Door #2 Open \n"))
 					logfile.close()
@@ -128,7 +128,7 @@ try:
 #------------------------------- Door 3 Code -------------------------------
 
 		if NUMBER_OF_DOORS > 2:
-			if GPIO.input(33) == GPIO.HIGH and GPIO.input(37) == GPIO.HIGH:  #Door Status is Unknown (or Open if 1 Sensor Per Door)
+			if GPIO.input(16) == GPIO.HIGH and GPIO.input(18) == GPIO.HIGH:  #Door Status is Unknown (or Open if 1 Sensor Per Door)
 				if Door3_OpenTimer == 0:
 					logfile = open("static/log.txt","a")
 				if SENSORS_PER_DOOR == 1:
@@ -140,17 +140,17 @@ try:
 				logfile.close()
 				Door3_OpenTimer = 1
 			else:
-				while GPIO.input(33) == GPIO.HIGH and GPIO.input(37) == GPIO.HIGH:
+				while GPIO.input(16) == GPIO.HIGH and GPIO.input(18) == GPIO.HIGH:
 					time.sleep(.5)
 				else:
-					if GPIO.input(33) == GPIO.LOW:  #Door is Closed
+					if GPIO.input(16) == GPIO.LOW:  #Door is Closed
 						logfile = open("static/log.txt","a")
 						logfile.write(datetime.now().strftime("%Y/%m/%d -- %H:%M:%S  -- Door #3 Closed \n"))
 						logfile.close()
 						print(datetime.now().strftime("%Y/%m/%d -- %H:%M:%S  -- Door #3 Closed"))
 						Door3_OpenTimer = 0
 
-				if GPIO.input(37) == GPIO.LOW:  #Door is Open
+				if GPIO.input(18) == GPIO.LOW:  #Door is Open
 					logfile = open("static/log.txt","a")
 					logfile.write(datetime.now().strftime("%Y/%m/%d -- %H:%M:%S  -- Door #3 Open \n"))
 					logfile.close()
