@@ -10,21 +10,21 @@ ip_address = socket.gethostbyname(socket.gethostname() + ".local")
 import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BOARD)  # the pin numbers refer to the board connector not the chip
 GPIO.setwarnings(False)
-GPIO.setup(16, GPIO.IN, GPIO.PUD_UP) # Door 1 is Closed sensor
-GPIO.setup(18, GPIO.IN, GPIO.PUD_UP) # Door 1 is Open sensor
-GPIO.setup(29, GPIO.IN, GPIO.PUD_UP) # Door 2 is Closed sensor
-GPIO.setup(31, GPIO.IN, GPIO.PUD_UP) # Door 2 is Open sensor
-GPIO.setup(33, GPIO.IN, GPIO.PUD_UP) # Door 3 is Closed sensor
-GPIO.setup(37, GPIO.IN, GPIO.PUD_UP) # Door 3 is Open sensor
+GPIO.setup(7, GPIO.IN, GPIO.PUD_UP) # Door 1 is Closed sensor
+GPIO.setup(11, GPIO.IN, GPIO.PUD_UP) # Door 1 is Open sensor
+GPIO.setup(13, GPIO.IN, GPIO.PUD_UP) # Door 2 is Closed sensor
+GPIO.setup(15, GPIO.IN, GPIO.PUD_UP) # Door 2 is Open sensor
+GPIO.setup(16, GPIO.IN, GPIO.PUD_UP) # Door 3 is Closed sensor
+GPIO.setup(18, GPIO.IN, GPIO.PUD_UP) # Door 3 is Open sensor
 
-GPIO.setup(7, GPIO.OUT)			#Door 1 Relay to Open Door
-GPIO.output(7, GPIO.HIGH)
-GPIO.setup(11, GPIO.OUT)		#Door 2 Relay to Open Door
-GPIO.output(11, GPIO.HIGH)
-GPIO.setup(13, GPIO.OUT)		#Door 3 Relay to Open Door
-GPIO.output(13, GPIO.HIGH)
-GPIO.setup(15, GPIO.OUT)		#Not Used for the project
-GPIO.output(15, GPIO.HIGH)
+GPIO.setup(31, GPIO.OUT)			#Door 1 Relay to Open Door
+GPIO.output(31, GPIO.HIGH)
+GPIO.setup(33, GPIO.OUT)		#Door 2 Relay to Open Door
+GPIO.output(33, GPIO.HIGH)
+GPIO.setup(35, GPIO.OUT)		#Door 3 Relay to Open Door
+GPIO.output(35, GPIO.HIGH)
+GPIO.setup(37, GPIO.OUT)		#Not Used for the project
+GPIO.output(37, GPIO.HIGH)
 
 from config import (
 	PORT,
@@ -106,19 +106,19 @@ def index():
 			No_Refresh = No_Refresh + 1;
 
 			if Door_To_Open == "door1":
-				GPIO.output(7, GPIO.LOW)
+				GPIO.output(31, GPIO.LOW)
 				time.sleep(1)
-				GPIO.output(7, GPIO.HIGH)
+				GPIO.output(31, GPIO.HIGH)
 				time.sleep(2)
 			if Door_To_Open == "door2":
-				GPIO.output(11, GPIO.LOW)
+				GPIO.output(33, GPIO.LOW)
 				time.sleep(1)
-				GPIO.output(11, GPIO.HIGH)
+				GPIO.output(33, GPIO.HIGH)
 				time.sleep(2)
 			if Door_To_Open == "door2":
-				GPIO.output(13, GPIO.LOW)
+				GPIO.output(35, GPIO.LOW)
 				time.sleep(1)
-				GPIO.output(13, GPIO.HIGH)
+				GPIO.output(35, GPIO.HIGH)
 				time.sleep(2)
 			
 	
@@ -143,7 +143,7 @@ def index():
 	door2image = IMAGE_QUESTION		#Default Status, Door is questionable, so image is question mark
 	door3image = IMAGE_QUESTION		#Default Status, Door is questionable, so image is question mark
 
-	if GPIO.input(16) == GPIO.HIGH and GPIO.input(18) == GPIO.HIGH:
+	if GPIO.input(7) == GPIO.HIGH and GPIO.input(11) == GPIO.HIGH:
 		if SENSORS_PER_DOOR == 1:
 			print("Door 1 is Open")
 			door1image = IMAGE_OPEN
@@ -152,17 +152,17 @@ def index():
 			door1image = IMAGE_QUESTION
 		Any_Door_Open = 1
 	else:
-		if GPIO.input(16) == GPIO.LOW:
+		if GPIO.input(7) == GPIO.LOW:
 			print("Door 1 is Closed")
 			door1image = IMAGE_CLOSED
 			Any_Door_Open = 0
-		if GPIO.input(18) == GPIO.LOW:
+		if GPIO.input(11) == GPIO.LOW:
 			print("Door 1 is Open")
 			door1image = IMAGE_OPEN
 			Any_Door_Open = 2
 
 	if NUMBER_OF_DOORS > 1:
-		if GPIO.input(29) == GPIO.HIGH and GPIO.input(31) == GPIO.HIGH:
+		if GPIO.input(13) == GPIO.HIGH and GPIO.input(15) == GPIO.HIGH:
 			if SENSORS_PER_DOOR == 1:
 				print("Door 2 is Open")
 				door2image = IMAGE_OPEN
@@ -171,16 +171,16 @@ def index():
 				door2image = IMAGE_QUESTION
 			Any_Door_Open = Any_Door_Open + 1
 		else:
-			if GPIO.input(29) == GPIO.LOW:
+			if GPIO.input(13) == GPIO.LOW:
 				print("Door 2 is Closed")
 				door2image = IMAGE_CLOSED
-			if GPIO.input(31) == GPIO.LOW:
+			if GPIO.input(15) == GPIO.LOW:
 				print("Door 2 is Open")
 				door2image = IMAGE_OPEN
 				Any_Door_Open = Any_Door_Open + 2
 
 	if NUMBER_OF_DOORS == 3:
-		if GPIO.input(33) == GPIO.HIGH and GPIO.input(37) == GPIO.HIGH:
+		if GPIO.input(16) == GPIO.HIGH and GPIO.input(18) == GPIO.HIGH:
 			if SENSORS_PER_DOOR == 1:
 				print("Door 3 is Open")
 				door3image = IMAGE_OPEN
@@ -189,10 +189,10 @@ def index():
 				door3image = IMAGE_QUESTION
 			Any_Door_Open = Any_Door_Open + 1
 		else:
-			if GPIO.input(33) == GPIO.LOW:
+			if GPIO.input(16) == GPIO.LOW:
 				print("Door 3 is Closed")
 				door3image = IMAGE_CLOSED
-			if GPIO.input(37) == GPIO.LOW:
+			if GPIO.input(18) == GPIO.LOW:
 				print("Door 3 is Open")
 				door3image = IMAGE_OPEN
 				Any_Door_Open = Any_Door_Open + 2
@@ -357,44 +357,44 @@ def GarageDoorStatus():
 	siri_door3_message = ""
 	Any_Door_Open = 0
 
-	if GPIO.input(16) == GPIO.HIGH and GPIO.input(18) == GPIO.HIGH: #Door 1 Unknown
+	if GPIO.input(7) == GPIO.HIGH and GPIO.input(11) == GPIO.HIGH: #Door 1 Unknown
 		if SENSORS_PER_DOOR == 1:
 			siri_door1_message = DOOR_1_NAME + " is open"
 		else:
 			siri_door1_message = DOOR_1_NAME + " is questionable"
 		Any_Door_Open = 1
 	else:
-		if GPIO.input(16) == GPIO.LOW: # Door 1 Closed
+		if GPIO.input(7) == GPIO.LOW: # Door 1 Closed
 			siri_door1_message = ""
-		if GPIO.input(18) == GPIO.LOW: # Door 1 Open
+		if GPIO.input(11) == GPIO.LOW: # Door 1 Open
 			siri_door1_message = DOOR_1_NAME + " is open"
 			Any_Door_Open = 1
 
 	if NUMBER_OF_DOORS > 1:
-		if GPIO.input(29) == GPIO.HIGH and GPIO.input(31) == GPIO.HIGH:
+		if GPIO.input(13) == GPIO.HIGH and GPIO.input(15) == GPIO.HIGH:
 			if SENSORS_PER_DOOR == 1:
 				siri_door2_message = DOOR_2_NAME + " is open"
 			else:
 				siri_door2_message = DOOR_2_NAME + " is questionable"
 			Any_Door_Open = Any_Door_Open + 1
 		else:
-			if GPIO.input(29) == GPIO.LOW:
+			if GPIO.input(13) == GPIO.LOW:
 				siri_door1_message = ""
-			if GPIO.input(31) == GPIO.LOW:
+			if GPIO.input(15) == GPIO.LOW:
 				siri_door2_message = DOOR_2_NAME + " is open"
 				Any_Door_Open = Any_Door_Open + 1
 
 	if NUMBER_OF_DOORS == 3:
-		if GPIO.input(33) == GPIO.HIGH and GPIO.input(37) == GPIO.HIGH:
+		if GPIO.input(16) == GPIO.HIGH and GPIO.input(18) == GPIO.HIGH:
 			if SENSORS_PER_DOOR == 1:
 				siri_door3_message = DOOR_3_NAME + " is open"
 			else:
 				siri_door3_message = DOOR_3_NAME + " is questionable"
 			Any_Door_Open = Any_Door_Open + 1
 		else:
-			if GPIO.input(33) == GPIO.LOW:
+			if GPIO.input(16) == GPIO.LOW:
 				siri_door3_message = ""
-			if GPIO.input(37) == GPIO.LOW:
+			if GPIO.input(18) == GPIO.LOW:
 				siri_door3_message = DOOR_1_NAME + " is open"
 				Any_Door_Open = Any_Door_Open + 1
 
@@ -432,66 +432,66 @@ def GarageSiri():
 		logfile.close()
 
 		if what_door == "Door1" and dowhat == "Open":
-			if GPIO.input(16) == GPIO.LOW:
+			if GPIO.input(31) == GPIO.LOW:
 				print("Door 1 is currently Closed, let's open it.")
-				GPIO.output(7, GPIO.LOW)
+				GPIO.output(31, GPIO.LOW)
 				time.sleep(1)
-				GPIO.output(7, GPIO.HIGH)
+				GPIO.output(15, GPIO.HIGH)
 				return 'Garage Door Opening'
-			if GPIO.input(16) == GPIO.HIGH:
+			if GPIO.input(7) == GPIO.HIGH:
 				print("Garage is already open, do nothing.")
 				return 'Door 1 is already open'
 		if what_door == "Door1" and dowhat == "Close":
-			if GPIO.input(18) == GPIO.LOW:
+			if GPIO.input(11) == GPIO.LOW:
 				print("Garage is currently Open, let's close it.")
-				GPIO.output(7, GPIO.LOW)
+				GPIO.output(31, GPIO.LOW)
 				time.sleep(1)
-				GPIO.output(7, GPIO.HIGH)
+				GPIO.output(31, GPIO.HIGH)
 				return 'Garage Door Closing'
-			if GPIO.input(18) == GPIO.HIGH:
+			if GPIO.input(11) == GPIO.HIGH:
 				print("Garage is already closed, do nothing.")
 				return 'Door 1 is already closed'
 
 
 		if what_door == "Door2" and dowhat == "Open":
-			if GPIO.input(29) == GPIO.LOW:
+			if GPIO.input(13) == GPIO.LOW:
 				print("Door 2 is currently Closed, let's open it.")
-				GPIO.output(11, GPIO.LOW)
+				GPIO.output(33, GPIO.LOW)
 				time.sleep(1)
-				GPIO.output(11, GPIO.HIGH)
+				GPIO.output(33, GPIO.HIGH)
 				return 'Garage Door Opening'
-			if GPIO.input(29) == GPIO.HIGH:
+			if GPIO.input(13) == GPIO.HIGH:
 				print("Garage is already open, do nothing.")
 				return 'Door 2 is already open'
 		if what_door == "Door2" and dowhat == "Close":
-			if GPIO.input(31) == GPIO.LOW:
+			if GPIO.input(15) == GPIO.LOW:
 				print("Garage is currently Open, let's close it.")
-				GPIO.output(11, GPIO.LOW)
+				GPIO.output(33, GPIO.LOW)
 				time.sleep(1)
-				GPIO.output(11, GPIO.HIGH)
+				GPIO.output(33, GPIO.HIGH)
 				return 'Garage Door Closing'
-			if GPIO.input(31) == GPIO.HIGH:
+			if GPIO.input(15) == GPIO.HIGH:
 				print("Garage is already closed, do nothing.")
 				return 'Door 2 is already closed'
 
 		if what_door == "Door3" and dowhat == "Open":
-			if GPIO.input(33) == GPIO.LOW:
+			if GPIO.input(16) == GPIO.LOW:
 				print("Door 2 is currently Closed, let's open it.")
-				GPIO.output(13, GPIO.LOW)
+				GPIO.output(35, GPIO.LOW)
 				time.sleep(1)
-				GPIO.output(13, GPIO.HIGH)
+				GPIO.output(35, GPIO.HIGH)
 				return 'Garage Door Opening'
-			if GPIO.input(33) == GPIO.HIGH:
+			if GPIO.input(16) == GPIO.HIGH:
 				print("Garage is already open, do nothing.")
 				return 'Door 2 is already open'
 		if what_door == "Door3" and dowhat == "Close":
-			if GPIO.input(37) == GPIO.LOW:
+			if GPIO.input(18) == GPIO.LOW:
 				print("Garage is currently Open, let's close it.")
-				GPIO.output(13, GPIO.LOW)
+				GPIO.output(35, GPIO.LOW)
 				time.sleep(1)
-				GPIO.output(13, GPIO.HIGH)
+				GPIO.output(35, GPIO.HIGH)
 				return 'Garage Door Closing'
-			if GPIO.input(37) == GPIO.HIGH:
+			if GPIO.input(18) == GPIO.HIGH:
 				print("Garage is already closed, do nothing.")
 				return 'Door 2 is already closed'
 
